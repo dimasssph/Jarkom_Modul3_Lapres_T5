@@ -66,6 +66,7 @@ Catatan: Jika tidak bisa dan menyerah untuk setup DHCP Server pada TUBAN (dengan
 - **SIDOARJO**, **GRESIK**, **MADIUN**, **BANYUWANGI** sebagai ```client```
 
 Ketikkan ```nano topologi.sh``` 
+
 Lalu masukkan, script :
 ```# Switch
 uml_switch -unix switch1 > /dev/null < /dev/null &
@@ -86,3 +87,6 @@ xterm -T GRESIK -e linux ubd0=GRESIK,jarkom umid=GRESIK eth0=daemon,,,switch1 me
 xterm -T MADIUN -e linux ubd0=MADIUN,jarkom umid=MADIUN eth0=daemon,,,switch3 mem=64M &
 xterm -T BANYUWANGI -e linux ubd0=BANYUWANGI umid-BANYUWANGI eth0=daemon,,,switch3 mem=64M &
 ```
+
+Setelah ```topologi.sh``` dibuat. Selanjutnya kita mengkonfigurasi interface tiap UML dengan mengketikkan ```nano /etc/network/interfaces```
+
