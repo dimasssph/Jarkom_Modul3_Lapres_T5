@@ -38,7 +38,7 @@ Kriteria lain yang diminta Bu Meguri pada topologi jaringan tersebut adalah:
 5. **(6) Client di subnet 1 mendapatkan peminjaman alamat IP selama 5 menit, sedangkan (6) client pada subnet 3 mendapatkan peminjaman IP selama 10 menit.**
 
 Bu Meguri adalah dosbing yang suka overthinking. Ia tidak ingin jaringan lokalnya terhubung ke internet secara langsung. Sehingga ia memberi tugas tambahan pada Anri untuk membuatkan Proxy sebagai penghubung jaringan lokal ke internet. Ada beberapa ketentuan yang harus dipenuhi dalam pembuatan Proxy ini.
-Pertama, akses ke proxy **hanya bisa dilakukan** oleh Anri sendiri sebagai user TA. (7) User autentikasi milik Anri memiliki format:
+Pertama, akses ke proxy **hanya bisa dilakukan** oleh Anri sendiri sebagai user TA. **(7) User autentikasi milik Anri memiliki format**:
 
 - `User : userta_yyy`
 - `Password : inipassw0rdta_yyy`
@@ -57,3 +57,32 @@ Untuk menandakan bahwa Proxy Server ini adalah Proxy yang dibuat oleh Anri, **(1
 Bantu Anri menyelesaikan TA nya dibawah bimbingan Bu Meguri!👩🏻‍🎓
 
 Catatan: Jika tidak bisa dan menyerah untuk setup DHCP Server pada TUBAN (dengan relay pada SURABAYA), maka setup DHCP pada SURABAYA (tanpa DHCP Relay). Pastinya nilai tidak akan maksimal.
+
+## Jawaban :
+
+### 1). Membuat topologi jaringan
+- **SURABAYA** sebagai ```router```
+- **MALANG**, **MOJOKERTO**, **TUBAN** sebagai ```server```
+- **SIDOARJO**, **GRESIK**, **MADIUN**, **BANYUWANGI** sebagai ```client```
+
+Ketikkan ```nano topologi.sh``` 
+Lalu masukkan, script :
+```# Switch
+uml_switch -unix switch1 > /dev/null < /dev/null &
+uml_switch -unix switch2 > /dev/null < /dev/null &
+uml_switch -unix switch3 > /dev/null < /dev/null &
+
+# Router
+xterm -T SURABAYA -e linux ubd0=SURABAYA,jarkom umid=SURABAYA eth0=tuntap,,,10.151.72.85 eth1=daemon,,,switch2 eth2=daemon,,,switch3 eth3=daemon,,,switch2 mem256M &
+
+# Server
+xterm -T MALANG -e linux ubd0=MALANG,jarkom umid=MALANG eth0=daemon,,,switch2 mem=160M &
+xterm -T MOJOKERTO -e linux ubd0=MOJOKERTO,jarkom umid=MOJOKERTO eth0=daemon,,,switch2 mem=128M &
+xterm -T TUBAN -e linux ubd0=TUBAN,jarkom umid=TUBAN eth0=daemon,,,switch2 mem=128M &
+
+# Klien
+xterm -T SIDOARJO -e linux ubd0=SIDOARJO,jarkom umid=SIDOARJO eth0=daemon,,,switch1 mem=64M &
+xterm -T GRESIK -e linux ubd0=GRESIK,jarkom umid=GRESIK eth0=daemon,,,switch1 mem=64M &
+xterm -T MADIUN -e linux ubd0=MADIUN,jarkom umid=MADIUN eth0=daemon,,,switch3 mem=64M &
+xterm -T BANYUWANGI -e linux ubd0=BANYUWANGI umid-BANYUWANGI eth0=daemon,,,switch3 mem=64M &
+```
